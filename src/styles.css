@@ -1,0 +1,354 @@
+:root {
+  color-scheme: dark;
+  --bg: #12141a;
+  --panel: #1b1e27;
+  --panel-2: #22262f;
+  --border: #333845;
+  --text: #dde2ec;
+  --text-dim: #9aa3b2;
+  --accent: #5a8cff;
+  --danger: #e05a5a;
+  --warn: #e0b45a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.5 system-ui, -apple-system, 'PingFang SC', sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+button {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font: inherit;
+}
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+button.danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+input,
+select {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 6px;
+  font: inherit;
+}
+
+.toolbar,
+.transport,
+.clip-panel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.app-title {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.project-name {
+  width: 140px;
+}
+
+.dirty-dot {
+  color: var(--warn);
+}
+
+.sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+}
+
+.zoom-label,
+.time {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+.time {
+  font-size: 15px;
+  color: var(--text);
+  min-width: 64px;
+}
+
+.loop-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.loop-toggle.active {
+  color: var(--accent);
+}
+
+.selection-info {
+  color: var(--text-dim);
+}
+
+/* 时间线 */
+.timeline {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.track-headers {
+  width: 220px;
+  flex: none;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.track-header {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.track-name {
+  width: 100%;
+  font-weight: 600;
+}
+.track-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.track-row input[type='range'] {
+  flex: 1;
+  min-width: 0;
+}
+.toggle {
+  width: 24px;
+  padding: 2px 0;
+  text-align: center;
+}
+.toggle.on-danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+.toggle.on-warn {
+  background: var(--warn);
+  border-color: var(--warn);
+  color: #222;
+}
+.vol-label {
+  width: 38px;
+  text-align: right;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline-scroll {
+  flex: 1;
+  overflow: auto;
+  background: var(--bg);
+}
+
+.timeline-content {
+  position: relative;
+}
+
+.track-lane {
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  background: repeating-linear-gradient(90deg, transparent 0 79px, rgba(255, 255, 255, 0.02) 79px 80px);
+}
+.track-lane.muted {
+  opacity: 0.45;
+}
+
+.clip {
+  position: absolute;
+  top: 4px;
+  background: #2c3a2f;
+  border: 1px solid #4a6b52;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+.clip.selected {
+  border-color: var(--accent);
+  background: #2a3550;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.clip-handle {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 2;
+}
+.clip-handle.left {
+  left: 0;
+}
+.clip-handle.right {
+  right: 0;
+}
+.clip-handle:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.playhead {
+  position: absolute;
+  top: 0;
+  width: 0;
+  border-left: 2px solid #ff5a5a;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.selection-overlay {
+  position: absolute;
+  background: rgba(90, 140, 255, 0.12);
+  border-left: 1px solid rgba(90, 140, 255, 0.6);
+  border-right: 1px solid rgba(90, 140, 255, 0.6);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* 片段面板 */
+.clip-panel {
+  gap: 12px;
+}
+.clip-panel.empty {
+  color: var(--text-dim);
+}
+.clip-panel label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-dim);
+}
+.clip-panel input[type='number'] {
+  width: 64px;
+}
+.clip-info {
+  color: var(--text-dim);
+}
+
+/* 导出对话框 */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+.modal {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.modal h2 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.progress {
+  position: relative;
+  height: 18px;
+  background: var(--panel-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.1s;
+}
+.progress span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+/* 提示 */
+.toasts {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 30;
+}
+.toast {
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  max-width: 360px;
+}
+.toast.error {
+  border-color: var(--danger);
+  color: #ffb0b0;
+}
+.toast.success {
+  border-color: #4a6b52;
+  color: #b0e0c0;
+}
